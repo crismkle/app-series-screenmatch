@@ -10,10 +10,7 @@ import com.aluracursos.screenmatch.service.ConvierteDatos;
 import javax.crypto.spec.PSource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Principal {
@@ -32,7 +29,7 @@ public class Principal {
         var nombreSerie = teclado.nextLine();
         var json = consumoApi.obtenerDatos(URL_BASE + nombreSerie.replace(" ", "+") + API_KEY);
         var datos = conversor.obtenerDatos(json, DatosSerie.class);
-        System.out.println(datos);
+//        System.out.println(datos);
 
         //Busca los datos de todas las temporadas
         List<DatosTemporadas> temporadas = new ArrayList<>();
@@ -61,16 +58,16 @@ public class Principal {
                 .collect(Collectors.toList());      //Si usamos .toList() creamos una lista innmutable
 
         //Top 5 episodios
-        System.out.println("Top 5 episodios");
-        datosEpisodios.stream()
-                .filter(e -> !e.evaluacion().equalsIgnoreCase("N/A"))
-                .peek(e -> System.out.println("Primer filtro (N/A)" + e))
-                .sorted(Comparator.comparing(DatosEpisodio::evaluacion).reversed()) //De mayor a menor
-                .peek(e -> System.out.println("Segundo filtro ordenación filtro (M > m)" + e))
-                .map(e -> e.titulo().toUpperCase())
-                .peek(e -> System.out.println("Tercer filtro mayúsculas (m > M)" + e))
-                .limit(5)
-                .forEach(System.out::println);
+//        System.out.println("Top 5 episodios");
+//        datosEpisodios.stream()
+//                .filter(e -> !e.evaluacion().equalsIgnoreCase("N/A"))
+//                .peek(e -> System.out.println("Primer filtro (N/A)" + e))
+//                .sorted(Comparator.comparing(DatosEpisodio::evaluacion).reversed()) //De mayor a menor
+//                .peek(e -> System.out.println("Segundo filtro ordenación filtro (M > m)" + e))
+//                .map(e -> e.titulo().toUpperCase())
+//                .peek(e -> System.out.println("Tercer filtro mayúsculas (m > M)" + e))
+//                .limit(5)
+//                .forEach(System.out::println);
 
         //Conviertiendo los datos a una lista del tipo Episodio
         List<Episodio> episodios = temporadas.stream()
@@ -81,11 +78,11 @@ public class Principal {
 //        episodios.forEach(System.out::println);
 
         // Busqueda de episodios a partir de x año
-        System.out.println("Indica el año a partir del cual deseas ver los episodios");
-        var fecha = teclado.nextInt();
-        teclado.nextLine();
+//        System.out.println("Indica el año a partir del cual deseas ver los episodios");
+//        var fecha = teclado.nextInt();
+//        teclado.nextLine();
 
-        LocalDate fechaBusqueda = LocalDate.of(fecha, 1, 1);
+//        LocalDate fechaBusqueda = LocalDate.of(fecha, 1, 1);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 //        episodios.stream()
@@ -95,6 +92,21 @@ public class Principal {
 //                                "Episodio " + e.getTitulo() +
 //                                "Fecha de lanzamiento " + e.getFechaDeLanzamiento().format(dtf)
 //                ));
+
+        // Busca episodios por un pedazo del título
+
+        System.out.println("Por favor, escriba el título del episodio que desea ver");
+        var pedazoTitulo = teclado.nextLine();
+        Optional<Episodio> episodioBuscado = episodios.stream()
+                .filter(e -> e.getTitulo().toUpperCase().contains(pedazoTitulo.toUpperCase()))
+                .findFirst();
+
+        if (episodioBuscado.isPresent()){
+            System.out.println("Episodio encontrado");
+            System.out.println("Los daots son: " + episodioBuscado.get());
+        } else{
+            System.out.println("Episodio no encontrado");
+        }
 
     }
 }

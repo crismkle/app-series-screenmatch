@@ -84,7 +84,7 @@ public class Principal {
 
 //        LocalDate fechaBusqueda = LocalDate.of(fecha, 1, 1);
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 //        episodios.stream()
 //                .filter(e -> e.getFechaDeLanzamiento() != null && e.getFechaDeLanzamiento().isAfter(fechaBusqueda))
 //                .forEach(e -> System.out.println(
@@ -95,18 +95,23 @@ public class Principal {
 
         // Busca episodios por un pedazo del título
 
-        System.out.println("Por favor, escriba el título del episodio que desea ver");
-        var pedazoTitulo = teclado.nextLine();
-        Optional<Episodio> episodioBuscado = episodios.stream()
-                .filter(e -> e.getTitulo().toUpperCase().contains(pedazoTitulo.toUpperCase()))
-                .findFirst();
-
-        if (episodioBuscado.isPresent()){
-            System.out.println("Episodio encontrado");
-            System.out.println("Los daots son: " + episodioBuscado.get());
-        } else{
-            System.out.println("Episodio no encontrado");
-        }
+//        System.out.println("Por favor, escriba el título del episodio que desea ver");
+//        var pedazoTitulo = teclado.nextLine();
+//        Optional<Episodio> episodioBuscado = episodios.stream()
+//                .filter(e -> e.getTitulo().toUpperCase().contains(pedazoTitulo.toUpperCase()))
+//                .findFirst();
+//
+//        if (episodioBuscado.isPresent()){
+//            System.out.println("Episodio encontrado");
+//            System.out.println("Los datos son: " + episodioBuscado.get());
+//        } else{
+//            System.out.println("Episodio no encontrado");
+//        }
+        Map<Integer, Double> evaluacionesPorTemporada = episodios.stream()
+                .filter(e -> e.getEvaluacion() > 0.0)
+                .collect(Collectors.groupingBy(Episodio::getTemporada,
+                        Collectors.averagingDouble(Episodio::getEvaluacion)));
+        System.out.println(evaluacionesPorTemporada);
 
     }
 }
